@@ -8,7 +8,7 @@ vcenter_password: "VMware1!"
 
 datacenter_name: "Datacenter"
 
-folder_prefix: "Datacenter/vm/SR/"
+folder_prefix: "Datacenter/vm/"
 
 # SR --> esxi_host : 200.200.200.250
 
