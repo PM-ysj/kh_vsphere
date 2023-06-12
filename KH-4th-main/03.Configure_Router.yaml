@@ -60,7 +60,6 @@
           set nat source rule 13 source address 10.10.103.0/24
           set nat source rule 13 translation address masquerade
 
-
           commit
           save"
         wait_for_process: True
