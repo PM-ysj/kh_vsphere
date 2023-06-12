@@ -26,7 +26,7 @@ New-ADGroup -Name $groupname -GroupCategory Security -GroupScope Global -Display
 $count=0..10
 foreach ($i in $count)
 { 
-  $username="S" + "{0:d2}" -f $i
+  $username="SR" + "{0:d2}" -f $i
   New-AdUser -Name $username -Path $oupath -Enabled $True -AccountPassword (ConvertTo-SecureString "VMware1!" -AsPlainText -force) -passThru  -PasswordNeverExpires 1 
   Add-ADGroupMember -Identity $groupname -Members $username
  }
