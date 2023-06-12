@@ -1,21 +1,21 @@
 # 정방향 조회 도메인 만들기 
-# Add-DnsServerPrimaryZone -Name "vclass.local" -ZoneFile "vclass.local.dns" 
+# Add-DnsServerPrimaryZone -Name "sr.local" -ZoneFile "sr.local.dns" 
 
 # 역방향 조회 도메인 만들기 
-Add-DnsServerPrimaryZone -NetworkID 10.10.10.0/24 -ZoneFile "10.10.10.in-addr.arpa.dns"
+Add-DnsServerPrimaryZone -NetworkID 10.10.100.0/24 -ZoneFile "10.10.100.in-addr.arpa.dns"
 
 # DNS 포워딩 
 # Add-DnsServerForwarder -IPAddress 192.168.3.2 -PassThru
 
 # Domain Controller Record
-Add-DnsServerResourceRecordA -Name "sa-vcsa-01" -ZoneName "vclass.local" -IPv4Address "10.10.10.10"
-Add-DnsServerResourceRecordPtr -Name "10" -ZoneName "10.10.10.in-addr.arpa" -PtrDomainName "sa-vcsa-01.vclass.local"
+Add-DnsServerResourceRecordA -Name "sr-vcsa-01" -ZoneName "sr.local" -IPv4Address "10.10.100.10"
+Add-DnsServerResourceRecordPtr -Name "100" -ZoneName "10.10.100.in-addr.arpa" -PtrDomainName "sr-vcsa-01.sr.local"
 
-Add-DnsServerResourceRecordA -Name "sa-esxi-01" -ZoneName "vclass.local" -IPv4Address "10.10.10.11"
-Add-DnsServerResourceRecordPtr -Name "11" -ZoneName "10.10.10.in-addr.arpa" -PtrDomainName "sa-esxi-01.vclass.local"
+Add-DnsServerResourceRecordA -Name "sr-esxi-01" -ZoneName "sr.local" -IPv4Address "10.10.100.11"
+Add-DnsServerResourceRecordPtr -Name "101" -ZoneName "10.10.100.in-addr.arpa" -PtrDomainName "sr-esxi-01.sr.local"
 
-Add-DnsServerResourceRecordA -Name "sa-esxi-02" -ZoneName "vclass.local" -IPv4Address "10.10.10.12"
-Add-DnsServerResourceRecordPtr -Name "12" -ZoneName "10.10.10.in-addr.arpa" -PtrDomainName "sa-esxi-02.vclass.local"
+Add-DnsServerResourceRecordA -Name "sr-esxi-02" -ZoneName "sr.local" -IPv4Address "10.10.100.12"
+Add-DnsServerResourceRecordPtr -Name "102" -ZoneName "10.10.100.in-addr.arpa" -PtrDomainName "sr-esxi-02.sr.local"
 
-Add-DnsServerResourceRecordA -Name "sa-esxi-03" -ZoneName "vclass.local" -IPv4Address "10.10.10.13"
-Add-DnsServerResourceRecordPtr -Name "13" -ZoneName "10.10.10.in-addr.arpa" -PtrDomainName "sa-esxi-03.vclass.local"
+Add-DnsServerResourceRecordA -Name "sr-esxi-03" -ZoneName "sr.local" -IPv4Address "10.10.100.13"
+Add-DnsServerResourceRecordPtr -Name "103" -ZoneName "10.10.100.in-addr.arpa" -PtrDomainName "sr-esxi-03.sr.local"
