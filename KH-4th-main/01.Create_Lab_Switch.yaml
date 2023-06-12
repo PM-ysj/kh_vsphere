@@ -4,7 +4,7 @@
 ---
 - hosts: localhost
   vars_files: ./vars.yaml
-
+22
   tasks: 
     - name: Create Lab Standard Switch
       community.vmware.vmware_vswitch:
