@@ -36,29 +36,29 @@
           set system name-server 200.200.200.245
           set service ntp server kr.pool.ntp.org
        
-          set interfaces ethernet eth1 vif 10 description 'VLAN 100 - Site A Management'
-          set interfaces ethernet eth1 vif 10 address 10.10.100.1/24
-          set interfaces ethernet eth1 vif 10 ipv6 address no-default-link-local
+          set interfaces ethernet eth1 vif 100 description 'VLAN 100 - Site A Management'
+          set interfaces ethernet eth1 vif 100 address 10.10.100.1/24
+          set interfaces ethernet eth1 vif 100 ipv6 address no-default-link-local
           
-          set interfaces ethernet eth1 vif 11 description 'VLAN 101 - Site A Storage'
-          set interfaces ethernet eth1 vif 11 address 10.10.101.1/24
-          set interfaces ethernet eth1 vif 11 ipv6 address no-default-link-local
+          set interfaces ethernet eth1 vif 101 description 'VLAN 101 - Site A Storage'
+          set interfaces ethernet eth1 vif 101 address 10.10.101.1/24
+          set interfaces ethernet eth1 vif 101 ipv6 address no-default-link-local
 
-          set interfaces ethernet eth1 vif 12 description 'VLAN 102 - Site A vMotion'
-          set interfaces ethernet eth1 vif 12 address 10.10.102.1/24
-          set interfaces ethernet eth1 vif 12 ipv6 address no-default-link-local
+          set interfaces ethernet eth1 vif 102 description 'VLAN 102 - Site A vMotion'
+          set interfaces ethernet eth1 vif 102 address 10.10.102.1/24
+          set interfaces ethernet eth1 vif 102 ipv6 address no-default-link-local
           
-          set interfaces ethernet eth1 vif 13 description 'VLAN 103 - Site A Production'
-          set interfaces ethernet eth1 vif 13 address 10.10.103.1/24
-          set interfaces ethernet eth1 vif 13 ipv6 address no-default-link-local
+          set interfaces ethernet eth1 vif 103 description 'VLAN 103 - Site A Production'
+          set interfaces ethernet eth1 vif 103 address 10.10.103.1/24
+          set interfaces ethernet eth1 vif 103 ipv6 address no-default-link-local
           
-          set nat source rule 10 outbound-interface eth0
-          set nat source rule 10 source address 10.10.100.0/24
-          set nat source rule 10 translation address masquerade
+          set nat source rule 100 outbound-interface eth0
+          set nat source rule 100 source address 10.10.100.0/24
+          set nat source rule 100 translation address masquerade
 
-          set nat source rule 13 outbound-interface eth0
-          set nat source rule 13 source address 10.10.103.0/24
-          set nat source rule 13 translation address masquerade
+          set nat source rule 103 outbound-interface eth0
+          set nat source rule 103 source address 10.10.103.0/24
+          set nat source rule 103 translation address masquerade
 
           commit
           save"
