@@ -72,4 +72,16 @@
         vlan_id: 102
       delegate_to: localhost
 
- 
+    - name: Adding Site A Prod Portgroup
+      community.vmware.vmware_portgroup:
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        esxi_hostname: "{{ esxi_hostname }}"
+        validate_certs: no
+        switch: "{{ student_ID }}"
+        portgroup: "{{ student_ID + '-SR-Prod' }}"
+        vlan_id: 103
+      delegate_to: localhost
+
+
