@@ -51,9 +51,9 @@
           type: thin
           datastore: '{{ datastore_name }}'
         networks:
-        - name: "{{ student_ID + '-SR-Mgmt' }}"
+        - name: "{{ student_ID + '-Mgmt' }}"
           device_type: vmxnet3
-        - name: "{{ student_ID + '-SR-Mgmt' }}"
+        - name: "{{ student_ID + '-Mgmt' }}"
           device_type: vmxnet3
         - name: "{{ student_ID + '-Trunk' }}"
           device_type: vmxnet3
