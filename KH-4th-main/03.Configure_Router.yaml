@@ -48,6 +48,10 @@
           set interfaces ethernet eth1 vif 12 address 10.10.102.1/24
           set interfaces ethernet eth1 vif 12 ipv6 address no-default-link-local
           
+          set interfaces ethernet eth1 vif 13 description 'VLAN 103 - Site A Prod'
+          set interfaces ethernet eth1 vif 13 address 10.10.103.1/24
+          set interfaces ethernet eth1 vif 13 ipv6 address no-default-link-local
+          
           set nat source rule 10 outbound-interface eth0
           set nat source rule 10 source address 10.10.100.0/24
           set nat source rule 10 translation address masquerade
