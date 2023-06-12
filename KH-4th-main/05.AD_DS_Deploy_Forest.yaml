@@ -19,7 +19,7 @@
         vm_shell_args: '-command "(Install-WindowsFeature -Name AD-Domain-Services -IncludeManagementTools)"'
         vm_shell_cwd: 'c:\Users\Administrator'
         wait_for_process: True
-       timeout: 180
+        timeout: 180
       delegate_to: localhost
       register: shell_command_with_wait_timeout
 
