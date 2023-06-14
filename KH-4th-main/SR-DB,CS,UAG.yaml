@@ -13,7 +13,7 @@
         folder: '{{ folder_prefix + student_ID }}'
         name: '{{ item.vmname }}'
         state: poweredoff
-        guest_id: windows2022vdi_64Guest
+        guest_id: windows2019srvNext_64Guest
         esxi_hostname: "{{ esxi_hostname }}"
         hardware:
           num_cpus: 2
