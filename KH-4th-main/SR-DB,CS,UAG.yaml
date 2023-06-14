@@ -3,7 +3,7 @@
   vars_files: ./vars.yaml
 
   tasks: 
-    - name: Create DB VM
+    - name: Create DB,CS,UAG VM
       community.vmware.vmware_guest:
         hostname: "{{ vcenter_hostname }}"
         username: "{{ vcenter_username }}"
@@ -11,7 +11,7 @@
         validate_certs: 'false'
         datacenter: '{{datacenter_name}}'
         folder: '{{ folder_prefix + student_ID }}'
-        name: "{{ student_ID + '-DB' }}"
+        name: "{{ student_ID + '-DBS' }}"
         state: poweredoff
         guest_id: freebsd13_64Guest
         esxi_hostname: "{{ esxi_hostname }}"
