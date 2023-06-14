@@ -11,7 +11,7 @@
         validate_certs: 'false'
         datacenter: '{{datacenter_name}}'
         folder: '{{ folder_prefix + student_ID }}'
-        name: "{{ item.vmname }}"
+        name: '{{ item.vmname }}'
         state: poweredoff
         guest_id: freebsd13_64Guest
         esxi_hostname: "{{ esxi_hostname }}"
