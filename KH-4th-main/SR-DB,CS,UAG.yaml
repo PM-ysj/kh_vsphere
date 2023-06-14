@@ -3,7 +3,7 @@
   vars_files: ./vars.yaml
 
   tasks: 
-    - name: Create DB,CS,UAG VM
+    - name: Create DB,CS VM
       community.vmware.vmware_guest:
         hostname: "{{ vcenter_hostname }}"
         username: "{{ vcenter_username }}"
@@ -38,6 +38,5 @@
       with_items:
       - {vmname: "{{ student_ID + '-DB' }}" }
       - {vmname: "{{ student_ID + '-CS' }}" }
-      - {vmname: "{{ student_ID + '-UAG' }}" } 
       delegate_to: localhost
       register: deploy_vm
