@@ -72,4 +72,4 @@
         wait_for_process: True										#명령문이 끝나면 대기선언 (180초 동안) 
         timeout: 180
       delegate_to: localhost											#Ansible의 작업 실행 위치 제어문
-      register: shell_command_with_wait_timeout
+      register: shell_command_with_wait_timeout							
