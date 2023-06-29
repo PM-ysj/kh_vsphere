@@ -2,7 +2,7 @@
 
 ---
 - hosts: localhost
-  vars_files: ./vars.yaml
+  vars_files: ./vars.yaml                                    #변수선언 파일 지정
 
   tasks: 
     - name: Create Router VM
