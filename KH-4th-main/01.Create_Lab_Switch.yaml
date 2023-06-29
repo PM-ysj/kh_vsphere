@@ -1,87 +1,107 @@
-## https://docs.ansible.com/ansible/latest/collections/community/vmware/vmware_vswitch_module.html#ansible-collections-community-vmware-vmware-vswitch-module 
-## https://docs.ansible.com/ansible/latest/collections/community/vmware/vmware_portgroup_module.html 
+##https://docs.ansible.com/ansible/latest/collections/community/vmware/vmware_vswitch_module.html#ansible-collections-community-vmware-vmware-vswitch-module
+## https://docs.ansible.com/ansible/latest/collections/community/vmware/vmware_portgroup_module.html
+
 
 ---
-- hosts: localhost
-  vars_files: ./vars.yaml
+- hosts: localhost					
+  vars_files: ./vars.yaml							                   #변수선언 파일 지정
 
-  tasks: 
-    - name: Create Lab Standard Switch
+
+  tasks:
+    - name: Create Lab Standard Switch					         #스위치 제작 명령어
       community.vmware.vmware_vswitch:
-        hostname: '{{ esxi_hostname }}'
-        username: '{{ esxi_username }}'
-        password: '{{ esxi_password }}'
-        validate_certs: no
-        switch: '{{ student_ID }}'
-        security:
-          promiscuous_mode: true
-          mac_changes: True
-          forged_transmits: True          
-      delegate_to: localhost
+        hostname: '{{ esxi_hostname }}'				        	 #esxi_hostname 변수값 불러오기(호스트 서버 200.200.200.X)
+        username: '{{ esxi_username }}'				        	 #esxi_username 변수값 불러오기
+        password: '{{ esxi_password }}'				        	 #esxi_passwd 변수값 불러오기
+        validate_certs: no							                 #인증서 검증 옵션 no라서 인증서 체크를 하지 않음
+        switch: '{{ student_ID }}'		  			        	 #스위치 이름 선언
+        security:									                       #스위치 security 설정
+          promiscuous_mode: true			    	         		 #무차별(promiscuous) 모드 허용 옵션
+          mac_changes: True					          	      	 #mac변경 허용 옵션
+          forged_transmits: True        			        	 #위조 전송 허용 옵션
+      delegate_to: localhost						              	 #Ansible의 작업 실행 위치 제어문 
 
-    - name: Waiting 10 seconds for completing switch
+
+    - name: Waiting 10 seconds for completing switch 		 #스위치 완성 후 10초간 대기 시간 설정 명령어
       wait_for:
         timeout: 10
       delegate_to: localhost
 
-    - name: Adding Trunk Portgroup
+
+    - name: Adding Trunk Portgroup					          	 #스위치 Trunk 포트 그룹 만들기
       community.vmware.vmware_portgroup:
         hostname: "{{ vcenter_hostname }}"
         username: "{{ vcenter_username }}"
         password: "{{ vcenter_password }}"
         esxi_hostname: "{{ esxi_hostname }}"
         validate_certs: no
-        switch: "{{ student_ID }}"
-        portgroup: "{{ student_ID + '-Trunk' }}"
-        vlan_id: 4095
-      delegate_to: localhost
+        switch: "{{ student_ID }}"						           #포트그룹을 생성할 스위치를 지정
+        portgroup: "{{ student_ID + '-Trunk' }}"	  	   #포트그룹 이름 선언
+        vlan_id: 4095								                     #4095 vlan 설정(all trunk 속성을 가진 vlan id)
+      delegate_to: localhost							               #Ansible의 작업 실행 위치 제어문
 
-    - name: Adding Site A Management Portgroup
+
+    - name: Adding Site A Management Portgroup			     #100 vlan 설정(매니지먼트 포트 그룹 설정)
+      community.vmware.vmware_portgroup:
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        esxi_hostname: "{{ esxi_hostname }}"				  
+        validate_certs: no
+        switch: "{{ student_ID }}"						          #포트그룹을 생성할 스위치를 지정
+        portgroup: "{{ student_ID + '-SA-Mgmt' }}"		  #포트그룹 이름 선언
+        vlan_id: 100								                    #vlan값 100으로 설정
+      delegate_to: localhost							              #Ansible의 작업 실행 위치 제어문
+
+
+    - name: Adding Site A Storage Portgroup				      #101 vlan 설정(스토리지 포트 그룹 설정)
+      community.vmware.vmware_portgroup:				        #포트그룹 생성 명령어 실행
+        hostname: "{{ vcenter_hostname }}"      
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        esxi_hostname: "{{ esxi_hostname }}"
+        validate_certs: no
+        switch: "{{ student_ID }}"						          #포트그룹을 생성할 스위치를 지정
+        portgroup: "{{ student_ID + '-SA-Storage' }}"	  #포트그룹 이름 선언
+        vlan_id: 101								                    #vlan값 101으로 설정
+      delegate_to: localhost							              #Ansible의 작업 실행 위치 제어문
+
+
+    - name: Adding Site A vMotion Portgroup				      #102 vlan 설정(vMotion 포트 그룹 설정)
       community.vmware.vmware_portgroup:
         hostname: "{{ vcenter_hostname }}"
         username: "{{ vcenter_username }}"
         password: "{{ vcenter_password }}"
         esxi_hostname: "{{ esxi_hostname }}"
         validate_certs: no
-        switch: "{{ student_ID }}"
-        portgroup: "{{ student_ID + '-Mgmt' }}"
-        vlan_id: 100
-      delegate_to: localhost
+        switch: "{{ student_ID }}"						           #포트그룹을 생성할 스위치를 지정
+        portgroup: "{{ student_ID + '-SA-vMotion' }}"	 	 #포트그룹 이름 선언
+        vlan_id: 102								                     #vlan값 102으로 설정
+      delegate_to: localhost							               #Ansible의 작업 실행 위치 제어문
 
-    - name: Adding Site A Storage Portgroup
+
+    - name: Adding Site A Production Portgroup			     #103 vlan 설정(Prod 포트 그룹 설정)
       community.vmware.vmware_portgroup:
         hostname: "{{ vcenter_hostname }}"
         username: "{{ vcenter_username }}"
         password: "{{ vcenter_password }}"
         esxi_hostname: "{{ esxi_hostname }}"
         validate_certs: no
-        switch: "{{ student_ID }}"
-        portgroup: "{{ student_ID + '-Storage' }}"
-        vlan_id: 101
-      delegate_to: localhost
+        switch: "{{ student_ID }}"						            #포트그룹을 생성할 스위치를 지정
+        portgroup: "{{ student_ID + '-SA-Prod' }}"			  #포트그룹 이름 선언
+        vlan_id: 103								                      #vlan값 103으로 설정
+      delegate_to: localhost						 	                #Ansible의 작업 실행 위치 제어문
 
-    - name: Adding Site A vMotion Portgroup
+
+    - name: Adding Site A DMZ Portgroup			             #120 vlan 설정(DMZ 포트 그룹 설정)
       community.vmware.vmware_portgroup:
         hostname: "{{ vcenter_hostname }}"
         username: "{{ vcenter_username }}"
         password: "{{ vcenter_password }}"
         esxi_hostname: "{{ esxi_hostname }}"
         validate_certs: no
-        switch: "{{ student_ID }}"
-        portgroup: "{{ student_ID + '-vMotion' }}"
-        vlan_id: 102
-      delegate_to: localhost
-
-    - name: Adding Site A Prod Portgroup
-      community.vmware.vmware_portgroup:
-        hostname: "{{ vcenter_hostname }}"
-        username: "{{ vcenter_username }}"
-        password: "{{ vcenter_password }}"
-        esxi_hostname: "{{ esxi_hostname }}"
-        validate_certs: no
-        switch: "{{ student_ID }}"
-        portgroup: "{{ student_ID + '-Prod' }}"
-        vlan_id: 103
-      delegate_to: localhost
-
-
+        switch: "{{ student_ID }}"						            #포트그룹을 생성할 스위치를 지정
+        portgroup: "{{ student_ID + '-SA-Prod' }}"			  #포트그룹 이름 선언
+        vlan_id: 120								                      #vlan값 120으로 설정
+      delegate_to: localhost						 	                #Ansible의 작업 실행 위치 제어문
+      
