@@ -5,12 +5,12 @@
   vars_files: ./vars.yaml                                    # 변수선언 파일 지정
 
   tasks: 
-    - name: Create Router VM
+    - name: Create Router VM                                 #스위치 제작 명령어
       community.vmware.vmware_guest:
-        hostname: "{{ vcenter_hostname }}"
-        username: "{{ vcenter_username }}"
-        password: "{{ vcenter_password }}"
-        validate_certs: 'false'
+        hostname: "{{ vcenter_hostname }}"                   #esxi_hostname 변수값 불러오기(호스트 서버 200.200.200.X)
+        username: "{{ vcenter_username }}"                   #esxi_username 변수값 불러오기
+        password: "{{ vcenter_password }}"                   #esxi_passwd 변수값 불러오기
+        validate_certs: 'false'                              #인증서 검증 옵션 no라서 인증서 체크를 하지 않음
         datacenter: '{{datacenter_name}}'
         folder: '{{ folder_prefix + student_ID }}'
         name: '{{ item.vmname }}'
