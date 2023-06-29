@@ -1,0 +1,75 @@
+## https://docs.ansible.com/ansible/latest/collections/community/vmware/vmware_vm_shell_module.html#ansible-collections-community-vmware-vmware-vm-shell-module
+
+
+---
+- hosts: localhost
+
+
+  vars_files: ./vars.yaml
+
+
+  tasks:
+    - name: VyOS Router Configuration										#Vyos 설정
+      community.vmware.vmware_vm_shell:	
+        hostname: '{{ vcenter_hostname }}'
+        username: '{{ vcenter_username }}'
+        password: '{{ vcenter_password }}'
+        validate_certs: 'false'											#인증서 체크 비활성화 
+        datacenter: '{{ datacenter_name }}'									#데이터센터 지정
+        folder: '{{ folder_prefix + student_ID }}'								#폴더 경로 지정
+        vm_id: "{{ student_ID + '-Router' }}"									#Vyos의 이름 지정
+        vm_id_type: vm_name												#vm_id_type 변수 지정
+        vm_username: 'vyos'												#vyos 유저네임 지정
+        vm_password: 'vyos'												#vyos 비밀번호 이름
+        vm_shell: /bin/vbash												#vyos의 시작할 때 절대 경로
+        vm_shell_cwd: "/tmp"												#vyos의 시작할 때 현재 작업 디렉터리
+        vm_shell_args: |-												#script의 내용 즉 명령어 본문
+          -c "source /opt/vyatta/etc/functions/script-template						#함수 지정 변경 경로 선언
+          configure													#구성명령창으로 이동
+          set system login user admin full-name Admin_User						#admin계정 추가
+          set system login user admin authentication plaintext-password VMware1!		#admin 계정 비밀번호 추가
+          set service ssh port 22											#ssh서비스 설정(22번)
+          set system ipv6 disable											#ipv6 비활성화
+         
+          set interfaces ethernet eth0 address dhcp								#eth0 address ip를 DHCP서버에서 ip 할당 선언
+          set interfaces ethernet eth0 description Outside						#eth0 설명(description) : 아웃바운드 라고 작성함.
+          set interfaces ethernet eth0 ipv6 address no-default-link-local				#
+          set protocols static route 0.0.0.0/0 next-hop 200.200.200.254				#Static routing table 작성 모든 네트워크에 대해 200.200.200.254으로 라우팅 설정
+
+
+          set system name-server 200.200.200.245								#DNS 서버 설정
+          set service ntp server kr.pool.ntp.org								#ntp 서비스 설정
+       
+          set interfaces ethernet eth1 vif 100 description 'VLAN 100 - Site A Management'	#vlan 100 mgnt 이더넷 인터페이스 지정
+          set interfaces ethernet eth1 vif 100 address 10.10.100.1/24				#vlan 100 이더넷 인터페이스 ipv4 주소 부여
+          set interfaces ethernet eth1 vif 100 ipv6 address no-default-link-local		#vlan 100 ipv6 비활성화
+         
+          set interfaces ethernet eth1 vif 101 description 'VLAN 101 - Site A Storage'	#vlan 101 storage 이더넷 인터페이스 지정
+          set interfaces ethernet eth1 vif 101 address 10.10.101.1/24				#vlan 101 이더넷 인터페이스 ipv4 주소 부여
+          set interfaces ethernet eth1 vif 101 ipv6 address no-default-link-local		#vlan 101 storage ipv6 비활성화
+
+
+          set interfaces ethernet eth1 vif 102 description 'VLAN 102 - Site A vMotion'	#vlan 102 vmotion 이더넷 인터페이스 지정
+          set interfaces ethernet eth1 vif 102 address 10.10.102.1/24				#vlan 102 이더넷 인터페이스 ipv4 주소 부여
+          set interfaces ethernet eth1 vif 102 ipv6 address no-default-link-local		#vlan 102 vmotion ipv6 비활성화
+         
+          set interfaces ethernet eth1 vif 103 description 'VLAN 103 - Site A Production'	#vlan 103 prod 이더넷 인터페이스 지정
+          set interfaces ethernet eth1 vif 103 address 10.10.103.1/24				#vlan 103 이더넷 인터페이스 ipv4 주소 부여
+          set interfaces ethernet eth1 vif 103 ipv6 address no-default-link-local		#vlan 103 ipv6 비활성화
+         
+          set nat source rule 100 outbound-interface eth0							#nat-pt 룰 100 : 아웃바운드-인터페이스 eth0으로 설정.
+          set nat source rule 100 source address 10.10.100.0/24					#nat 룰 100 : 출발지 10.10.100.0/24 네트워크 설정 
+          set nat source rule 100 translation address masquerade					#nat 룰 100 : 10.10.100.0/24 네트워크 eth0으로 마스커레이드 설정. 
+
+
+          set nat source rule 103 outbound-interface eth0							#nat-pt 룰 103 : 아웃바운드-인터페이스 eth0으로 설정.
+          set nat source rule 103 source address 10.10.103.0/24					#nat 룰 103 : 출발지 10.10.103.0/24 네트워크 설정 
+          set nat source rule 103 translation address masquerade					#nat 룰 103 : 10.10.103.0/24 네트워크 eth0으로 마스커레이드 설정.
+
+
+          commit														#적용
+          save"														#저장
+        wait_for_process: True										#명령문이 끝나면 대기선언 (180초 동안) 
+        timeout: 180
+      delegate_to: localhost											#Ansible의 작업 실행 위치 제어문
+      register: shell_command_with_wait_timeout
