@@ -60,6 +60,37 @@
           set nat source rule 103 source address 10.10.103.0/24
           set nat source rule 103 translation address masquerade
 
+          delete int eth eth0 dhcp
+          set int eth eth0 addr 200.200.200.110/24
+
+          set int eth eth0 addr 200.200.200.120/24
+          set int eth eth0 addr 200.200.200.125/24
+          set int eth eth0 addr 200.200.200.170/24
+
+          set interfaces ethernet eth2 vif 120 description DMZ
+          set interfaces ethernet eth2 vif 120 address 10.10.120.1/24
+          set interfaces ethernet eth2 vif 120 ipv6 address no-default-link-local
+
+          #d-nat
+          set nat destination rule 120 destination addr 200.200.200.120
+          set nat destination rule 120 inbound-interface eth0
+          set nat destination rule 120 translation addr 10.10.120.2
+
+
+          set nat destination rule 125 destination addr 200.200.200.125
+          set nat destination rule 125 inbound-interface eth0
+          set nat destination rule 125 translation addr 10.10.120.3
+
+
+          set nat destination rule 170 destination addr 200.200.200.170
+          set nat destination rule 170 inbound-interface eth0
+          set nat destination rule 170 translation addr 10.10.100.100
+
+
+          set nat source rule 120 outbound-interface eth2
+          set nat source rule 120 source address 10.10.120.0/24
+          set nat source rule 120 translation address masquerade
+
           commit
           save"
         wait_for_process: True
