@@ -60,7 +60,7 @@
           set nat source rule 103 source address 10.10.103.0/24
           set nat source rule 103 translation address masquerade
 
-          delete int eth eth0 dhcp
+          delete int eth eth0 addr dhcp
           set int eth eth0 addr 200.200.200.110/24
 
           set int eth eth0 addr 200.200.200.120/24
